@@ -1,10 +1,27 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
+type Task = {
+  id: number
+  text: string
+  done: boolean
+}
 
 export default function Home() {
   const [task, setTask] = useState('')
-  const [tasks, setTasks] = useState<{ id: number, text: string, done: boolean }[]>([])
+  const [tasks, setTasks] = useState<Task[]>([])
+
+  useEffect(() => {
+    const storedTasks = localStorage.getItem('tasks')
+    if (storedTasks) {
+      setTasks(JSON.parse(storedTasks))
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem('tasks', JSON.stringify(tasks))
+  }, [tasks])
 
   const addTask = () => {
     if (task.trim() === '') return
